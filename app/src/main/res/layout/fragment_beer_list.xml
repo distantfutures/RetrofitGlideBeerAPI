@@ -12,7 +12,8 @@
             android:id="@+id/beer_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager" />
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:listitem="@layout/beer_list_item"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
