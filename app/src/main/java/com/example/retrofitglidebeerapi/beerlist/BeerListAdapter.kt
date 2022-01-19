@@ -41,7 +41,7 @@ class BeerListAdapter(private val beerList: List<BeerList>) : RecyclerView.Adapt
         fun bind(
             item: BeerList
         ) {
-            beerName.text = item.beerName.capitalizeWords()
+            beerName.text = item.name.capitalizeWords()
         }
         fun String.capitalizeWords(): String = split(" ").joinToString(" ") {
             it.replaceFirstChar {

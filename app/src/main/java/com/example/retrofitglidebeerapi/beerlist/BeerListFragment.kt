@@ -6,13 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.retrofitglidebeerapi.BeerList
 import com.example.retrofitglidebeerapi.R
 import com.example.retrofitglidebeerapi.databinding.FragmentBeerListBinding
 
 class BeerListFragment : Fragment() {
 
-    val dummyBeerList = generateDummyList(20)
+    private val viewModel: BeerListViewModel by lazy {
+        ViewModelProvider(this).get(BeerListViewModel::class.java)
+    }
+
+    private val dummyBeerList = generateDummyList(20)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -24,10 +29,16 @@ class BeerListFragment : Fragment() {
             inflater, R.layout.fragment_beer_list, container, false
         )
 
+        // Allows Data Binding to Observe LiveData with the lifecycle of this Fragment
+        binding.lifecycleOwner = this
+
+        // Giving the binding access to the OverviewViewModel through XML data variable
+        binding.fragmentViewModel = viewModel
+
         binding.beerList.adapter = BeerListAdapter(dummyBeerList)
         return binding.root
     }
-    fun generateDummyList(size: Int): List<BeerList> {
+    private fun generateDummyList(size: Int): List<BeerList> {
 
         val list = ArrayList<BeerList>()
 

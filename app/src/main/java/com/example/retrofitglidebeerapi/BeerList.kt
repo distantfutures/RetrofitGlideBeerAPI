@@ -1,6 +1,7 @@
 package com.example.retrofitglidebeerapi
 
 data class BeerList(
-    val beerName: String,
-    //val beerImageUrl: String
+    //val id: String,
+    val name: String,
+    //val image_url: String
 )
