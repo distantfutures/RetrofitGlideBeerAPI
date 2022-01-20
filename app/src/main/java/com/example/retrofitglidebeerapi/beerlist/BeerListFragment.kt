@@ -36,14 +36,17 @@ class BeerListFragment : Fragment() {
         // Giving the binding access to the OverviewViewModel through XML data variable
         binding.fragmentViewModel = viewModel
 
-        viewModel.beers.observe(
-            viewLifecycleOwner,
-            Observer { beers ->
-                beers?.let {
-                    binding.beerList.adapter = BeerListAdapter(beers)
-                }
-            }
-        )
+        // Initialize Adapter
+        binding.beerList.adapter = BeerListAdapter()
+
+//        viewModel.beers.observe(
+//            viewLifecycleOwner,
+//            Observer { beers ->
+//                beers?.let {
+//                    binding.beerList.adapter = BeerListAdapter(beers)
+//                }
+//            }
+//        )
 
         return binding.root
     }
