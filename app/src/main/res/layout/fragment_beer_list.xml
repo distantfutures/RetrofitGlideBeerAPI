@@ -12,14 +12,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".beerlist.BeerListFragment" >
+        tools:context="com.example.retrofitglidebeerapi.MainActivity" >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/beer_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            tools:listitem="@layout/beer_list_item"/>
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/beer_list_item"
+            tools:itemCount="20"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

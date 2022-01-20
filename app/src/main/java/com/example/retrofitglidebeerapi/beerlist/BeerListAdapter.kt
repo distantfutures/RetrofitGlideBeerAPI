@@ -6,19 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.example.retrofitglidebeerapi.BeerList
 import com.example.retrofitglidebeerapi.R
 import java.util.*
 
 class BeerListAdapter(private val beerList: List<BeerList>) : RecyclerView.Adapter<BeerListAdapter.ViewHolder>() {
-//    var beerData = listOf<BeerList>()
-//        set(value) {
-//            field = value
-//            notifyDataSetChanged()
-//        }
 
-    override fun getItemCount(): Int = 20
+    override fun getItemCount(): Int = beerList.size
         // beerData.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -31,7 +27,7 @@ class BeerListAdapter(private val beerList: List<BeerList>) : RecyclerView.Adapt
     ) {
         val item = beerList[position]
         holder.bind(item)
-        Log.i("ResponseAdapter", "pokeList: ${beerList.size}")
+        Log.i("ResponseAdapter", "BeerListSize: ${beerList.size}")
     }
 
     class ViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -41,7 +37,8 @@ class BeerListAdapter(private val beerList: List<BeerList>) : RecyclerView.Adapt
         fun bind(
             item: BeerList
         ) {
-            beerName.text = item.name.capitalizeWords()
+            //beerName.text = item.name.capitalizeWords()
+            // beerImage.setImageURI(item.image_url.toUri())
         }
         fun String.capitalizeWords(): String = split(" ").joinToString(" ") {
             it.replaceFirstChar {
