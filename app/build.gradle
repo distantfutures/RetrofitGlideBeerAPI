@@ -84,4 +84,7 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:4.12.0"
     //RxJava3
     implementation "io.reactivex.rxjava3:rxjava:3.1.5"
+    implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'
+    implementation 'io.reactivex:rxjava-reactive-streams:1.2.1'
+    implementation("androidx.lifecycle:lifecycle-reactivestreams-ktx:2.5.0-rc02")
 }

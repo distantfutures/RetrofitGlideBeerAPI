@@ -4,8 +4,10 @@ import com.example.retrofitglidebeerapi.BeerList
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import io.reactivex.rxjava3.core.Flowable
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
@@ -18,7 +20,8 @@ private val moshi = Moshi.Builder()
 private val retrofit = Retrofit.Builder()
 //    .addConverterFactory(GsonConverterFactory.create())
     .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+//    .addCallAdapterFactory(CoroutineCallAdapterFactory())
+    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
     .baseUrl(BASE_URL)
     .build()
 
@@ -26,8 +29,8 @@ private val retrofit = Retrofit.Builder()
 interface BeerApiService {
     // Gets answers objects
     @GET("beers")
-    suspend fun getBeerList():
-        Response<List<BeerList>>
+    fun getBeerList():
+        Flowable<List<BeerList>>
 }
 
 // Creates API object using Retrofit to implement API Service

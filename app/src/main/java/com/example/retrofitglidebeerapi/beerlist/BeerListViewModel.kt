@@ -2,6 +2,7 @@ package com.example.retrofitglidebeerapi.beerlist
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.LiveDataReactiveStreams
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.retrofitglidebeerapi.BeerList
@@ -9,7 +10,9 @@ import com.example.retrofitglidebeerapi.network.BeerApi
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Observable.just
 import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -18,11 +21,6 @@ import java.util.*
 
 class BeerListViewModel : ViewModel() {
     private val TAG = "VMTest"
-
-    // Create Job
-    private val viewModelJob = Job()
-    // Create CoroutineScope
-    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     private val _beers = MutableLiveData<List<BeerList>>()
     val beers: LiveData<List<BeerList>>
@@ -37,24 +35,31 @@ class BeerListViewModel : ViewModel() {
         fromTest()
         fromTestIter()
     }
-
     private fun getTheBeers() {
-        coroutineScope.launch {
-            val response = BeerApi.retrofitService.getBeerList()
+        val beers = BeerApi.retrofitService.getBeerList()
 
-            if (response.isSuccessful) {
-                Log.i("Response", "Success!")
-                val theBeers = response.body()
-                Log.i("ResponseListResults", "Beer List: ${theBeers?.size}")
-                _beers.value = theBeers
+        val observer = object : Observer<List<BeerList>> {
+            override fun onSubscribe(d: Disposable) {
+                Log.i(TAG, "onSubscribe")
+            }
 
-                for (i in 0 until theBeers?.size!!) {
-                    Log.i("Response", "Beer: ${theBeers.get(i).image_url}")
-                }
-            } else {
-                Log.i("Response", "Failed")
+            override fun onNext(t: List<BeerList>) {
+                Log.i(TAG, "${t}")
+                _beers.postValue(t)
+            }
+
+            override fun onError(e: Throwable) {
+                Log.i(TAG, "onError")
+            }
+
+            override fun onComplete() {
+                Log.i(TAG, "onComplete")
             }
         }
+
+        beers.toObservable()
+            .subscribeOn(Schedulers.io())
+            .subscribe(observer)
     }
 
     private fun justTest() {
