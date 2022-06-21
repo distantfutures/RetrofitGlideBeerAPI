@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.retrofitglidebeerapi.BeerList
 import com.example.retrofitglidebeerapi.network.BeerApi
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observer
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
@@ -17,33 +19,29 @@ class BeerListViewModel : ViewModel() {
     val beers: LiveData<List<BeerList>>
         get() = _beers
 
+    private val disposable = CompositeDisposable()
     init {
         getBeers()
     }
 
     private fun getBeers() {
         val beersApi = BeerApi.retrofitService.getBeerList()
-        beersApi.toObservable()
+        disposable.add(beersApi
             .subscribeOn(Schedulers.io())
-            .subscribe(setBeersObserver())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    _beers.postValue(it)
+                },
+                {
+                    _beers.postValue(null)
+                    Log.e(TAG, "onError: $it")
+                }
+            )
+        )
+    }
+    fun clearDisposable() {
+        disposable.clear()
     }
 
-    private fun setBeersObserver(): Observer<List<BeerList>> {
-        return object : Observer<List<BeerList>> {
-            override fun onSubscribe(d: Disposable) {
-                Log.i(TAG, "onSubscribe")
-            }
-            override fun onNext(t: List<BeerList>) {
-                Log.i(TAG, "$t")
-                _beers.postValue(t)
-            }
-            override fun onError(e: Throwable) {
-                Log.e(TAG, "onError: $e")
-                _beers.postValue(null)
-            }
-            override fun onComplete() {
-                Log.i(TAG, "onComplete")
-            }
-        }
-    }
 }

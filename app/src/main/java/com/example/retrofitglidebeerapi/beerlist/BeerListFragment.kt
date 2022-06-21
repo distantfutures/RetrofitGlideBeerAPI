@@ -37,4 +37,9 @@ class BeerListFragment : Fragment() {
 
         return binding.root
     }
+
+    override fun onStop() {
+        viewModel.clearDisposable()
+        super.onStop()
+    }
 }
